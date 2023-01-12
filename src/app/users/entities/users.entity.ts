@@ -26,6 +26,9 @@ export class UsersEntity {
   @Column()
   password: string;
 
+  @Column({ nullable: true })
+  reset_password_token: string;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: string;
 

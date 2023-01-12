@@ -1,0 +1,104 @@
+npm install @nestjs-module/mailer nodemailer
+
+
+
+app.module
+@Module({
+  imports: [
+    MailerModule.forRoot({
+      host: 'smtp.sendgrid.net',
+      auth: {
+        user: 'apikey',
+        pass: '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'
+      }
+    })
+  ]
+})
+
+
+nest g controller email --flat
+
+import { MailerService } from '@nestjs-modules/mailer'
+impoprt {} from '@nestjs/common'
+
+
+@Controller('email')
+export class EmailController{
+  constructor(private mailService: MailerService) {}
+
+  @Get('plain-text-email')
+  async plainTextEmail(@Query('toemail') toemail) {
+    await this.mailService.sendMail({
+      to: toemail,
+      from: 'jeferson.silva@3blocks.com.br',
+      subject: 'Simple Plain Text',
+      text: 'Welcome to nestjs email demo',
+    });
+    return 'success';
+  }
+}
+
+
+
+
+//CHAT GPT
+
+Para enviar um e-mail usando o NestJS, primeiro você precisa instalar os pacotes nodemailere . 
+nestjs-nodemailerVocê pode fazer isso executando o seguinte comando no diretório raiz do seu projeto:
+
+Em seguida, você precisa criar um módulo para lidar com o transporte de e-mail em seu aplicativo. 
+Você pode fazer isso criando um novo arquivo em seu srcdiretório nomeado email.module.tse adicionando o seguinte código:
+
+import { Module } from '@nestjs/common';
+import { NodemailerModule } from 'nestjs-nodemailer';
+
+@Module({
+  imports: [
+    NodemailerModule.forRoot({
+      transport: {
+        service: 'SendGrid',
+        auth: {
+          user: 'your_sendgrid_username',
+          pass: 'your_sendgrid_password',
+        },
+      },
+    }),
+  ],
+  exports: [NodemailerModule],
+})
+export class EmailModule {}
+
+
+
+Certifique-se de alterar o valor das propriedades usere passpara corresponder ao nome de usuário e senha da sua conta SendGrid.
+
+Aí no seu service ou controller você pode usar @Injectable()decorator, e @Nodemailer()decorator, 
+esse último decorator é o que te dá acesso ao transporterobjeto que você vai usar para enviar o e-mail:
+
+import { Injectable } from '@nestjs/common';
+import { InjectNodemailer, Nodemailer } from 'nestjs-nodemailer';
+
+@Injectable()
+export class AppService {
+  constructor(@InjectNodemailer() private readonly nodemailer: Nodemailer) {}
+
+  async sendEmail(): Promise<void> {
+    const message = {
+      from: 'youremail@example.com',
+      to: 'receiver@example.com',
+      subject: 'Test Email',
+      text: 'Hello World!',
+    };
+
+    this.nodemailer.transporter.sendMail(message, (error, info) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log(info);
+      }
+    });
+  }
+}
+
+
+Você também vai querer lidar com o erro de e-mail não enviado e também testá-lo em vários provedores de e-mail

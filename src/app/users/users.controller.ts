@@ -26,11 +26,6 @@ export class UsersController {
     return await this.userService.findAll();
   }
 
-  @Post()
-  async store(@Body() body: CreateUserDto) {
-    return await this.userService.store(body);
-  }
-
   @Get(':id')
   async show(@Param('id', new ParseUUIDPipe()) id: string) {
     return await this.userService.findOneOrFail(id);
