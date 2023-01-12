@@ -9,8 +9,8 @@ export class MailService {
 
   async sendMail(toEmail: string, token: string): Promise<boolean> {
     const message = {
-      to: toEmail,
-      from: process.env.MAIL_FROM,
+      to: 'jeferson.silva@3blocks.com.br',
+      from: 'noreply@application.com',
       subject: 'Reset Token App',
       text: token,
       html: `<b>${token}</b>`,
